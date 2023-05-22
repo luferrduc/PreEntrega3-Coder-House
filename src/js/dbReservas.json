@@ -1,0 +1,24 @@
+[
+    {
+        "id": "b4gkn6isr4i",
+        "ciudad": "Tokyo",
+        "hotel": "Sotetsu Fresa Inn Ginza-Nanachome",
+        "cantPersonas": 2,
+        "precio": 160000,
+        "habitacion": 202,
+        "nombrePersona": "Luciano Ferrando",
+        "fechaEntrada": "26/12/2023 14:00:00",
+        "fechaSalida":"30/12/2023 14:00:00"
+    },
+    {
+        "id": "0o6nbin4af0r",
+        "ciudad": "Osaka",
+        "hotel": "Nest Hotel Osaka Umeda",
+        "cantPersonas": 4,
+        "precio": 89923,
+        "habitacion": 101,
+        "nombrePersona": "José Pérez",
+        "fechaEntrada": "20/03/2024 11:00:00",
+        "fechaSalida":"30/03/2024 14:00:00"
+    }
+]
