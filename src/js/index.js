@@ -1,3 +1,15 @@
+//  Variables del DOM
+
+const listaHoteles = document.querySelector('#lista-hoteles')
+const agregarTexto  = document.querySelector("#agregar-texto")
+
+
+
+agregarTexto.addEventListener('click', (e) => {
+
+    listaHoteles.innerHTML= `<p> Hola desde el JS </p>`
+})
+
 // Lista de ciudades con sus respectivos Hoteles y precios
 
 // TOKYO
