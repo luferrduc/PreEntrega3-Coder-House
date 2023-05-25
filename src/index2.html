@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/style.css">
+  <title>Búsqueda de arriendos en Japón</title>
+</head>
+
+<body class="flex flex-col h-screen">
+  <!-- Navbar -->
+  <header class="bg-[#f4e3c7] p-4">
+    <nav class="flex justify-between items-center">
+      <a href="#" class="text-[#1a425d] font-bold text-lg">Home</a>
+      <a href="#" class="text-[#1a425d] font-bold text-lg">Reservas</a>
+      <a href="#" class="text-[#1a425d] font-bold text-lg">Contacto</a>
+    </nav>
+  </header>
+
+  <!-- Sección Principal -->
+  <main class="bg-[#f2f2f2] py-10 flex-grow">
+    <div class="container mx-auto px-4">
+      <form class="max-w-md mx-auto">
+        <div class="flex items-center mb-4 gap-5">
+          <input type="text" class="w-full py-2 px-4 rounded-lg border-2 border-gray-300 focus:outline-none focus:border-gray-500
+          placeholder:text-emerald-800 placeholder:font-bold font-bold" placeholder="Buscar por ciudad...">
+          <button class="bg-red-400 py-2 px-4 rounded-lg text-black font-bold hover:bg-red-200 transition-all ease-in ring-emerald-800 focus:ring">Buscar</button>
+        </div>
+      </form>
+
+      <div class="mx-auto mt-8">
+        <div class="bg-white rounded-lg shadow-lg p-4">
+          <!-- Aquí se mostrarían los resultados de la búsqueda -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#f4e3c7] p-4">
+    <!-- Contenido del Footer -->
+    &copy; Luciano
+  </footer>
+</body>
+
+</html>
