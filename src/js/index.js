@@ -2,13 +2,9 @@
 
 const listaHoteles = document.querySelector('#lista-hoteles')
 const agregarTexto  = document.querySelector("#agregar-texto")
+const inputCiudad = document.querySelector('#inputCiudad')
 
 
-
-agregarTexto.addEventListener('click', (e) => {
-
-    listaHoteles.innerHTML= `<p> Hola desde el JS </p>`
-})
 
 // Lista de ciudades con sus respectivos Hoteles y precios
 
@@ -24,7 +20,7 @@ agregarTexto.addEventListener('click', (e) => {
 // NARA
 // - Nara Royal Hotel = 41.403
 // - Hotel Nikko Nara = 60.772
-const ciudades = [
+const hoteles = [
     {
         id: 1,
         nombre: "Tokyo",
@@ -32,15 +28,12 @@ const ciudades = [
             {
                 id: 1,
                 nombre: "Sotetsu Fresa Inn Ginza-Nanachome",
-                precio: 85294,
-                habitaciones: [101,102,103,201,202,203]
-
+                precio: 85294
             },
             {
                 id: 2,
                 nombre: "The Square Hotel GINZA",
-                precio: 117280,
-                habitaciones: [101,102,103,201,202,203]
+                precio: 117280
             },
         ],
         precio: 50000
@@ -52,14 +45,12 @@ const ciudades = [
             {
                 id: 1,
                 nombre: "Hotel Resol Kyoto Kawaramachi Sanjo",
-                precio: 90459,
-                habitaciones: [101,102,103,201,202,203]
+                precio: 90459
             },
             {
                 id: 2,
                 nombre: "Hotel Resol Trinity Kyoto",
-                precio: 102412,
-                habitaciones: [101,102,103,201,202,203]
+                precio: 102412
             },
         ],
         precio: 35000
@@ -71,15 +62,13 @@ const ciudades = [
             {
                 id: 1,
                 nombre: "Sotetsu Fresa Inn Osaka Namba",
-                precio: 65748,
-                habitaciones: [101,102,103,201,202,203]
+                precio: 65748
             },
             {
                 id: 2,
                 nombre: "Nest Hotel Osaka Umeda",
-                precio: 58569,
-                habitaciones: [101,102,103,201,202,203]
-            },
+                precio: 58569
+            }
         ],
         precio: 40000
     },
@@ -90,15 +79,13 @@ const ciudades = [
             {
                 id: 1,
                 nombre: "Nara Royal Hotel",
-                precio: 41403,
-                habitaciones: [101,102,103,201,202,203]
+                precio: 41403
             },
             {
                 id: 2,
                 nombre: "Hotel Nikko Nara",
-                precio: 60772,
-                habitaciones: [101,102,103,201,202,203]
-            },
+                precio: 60772
+            }
         ],
         precio: 25000
     }
@@ -181,4 +168,49 @@ dbReservas.map((dbReserva) => {
 dbPersonas.map(dbPersona => {
     let persona = new Persona(dbPersona.nombre, dbPersona.edad, dbPersona.rut)
     personas.push(persona)
+})
+
+const crearHotelCard = (hotel, ciudad) => {
+    let {id: idHotel, nombre: nombreHotel, precio: precioHotel} = hotel;
+    let {id: idCiudad, nombre: nombreCiudad, precio: precioCiudad} = ciudad;
+    let hotelCard = 
+    `
+    <div class="rounded-md"> 
+        <img src="./assets/img/Ace_Hotel_Kyoto.jpg" >
+        <h3 class="font-bold text-lg" >${nombreHotel}, ${nombreCiudad}</h3>
+        <p class="text-slate-400 text-sm">Hotel en arriendo</p>
+        <p class="font-bold">Precio: $${precioHotel+precioCiudad}</p>
+    </div>
+    `;
+    return hotelCard;
+}
+
+function listarHoteles(){
+
+}
+
+
+
+agregarTexto.addEventListener('submit', (e) => {
+    e.preventDefault()
+    listaHoteles.innerHTML= `<p> Hola desde el JS </p>`
+})
+
+inputCiudad.addEventListener('keyup', (e) => {
+    listaHoteles.innerHTML= ``
+    let nombreHotel = e.target.value
+    let hotelesEncontrados = hoteles.filter((hotel) => {
+       return hotel.nombre.toUpperCase().includes(nombreHotel.toUpperCase())
+    })
+
+    let hotelDOM = ``
+    hotelesEncontrados.forEach((ciudad) => {
+        let ciudadE = {id: ciudad.id, nombre: ciudad.nombre, precio: ciudad.precio}
+        ciudad.hoteles.forEach(hotel => {
+            hotelDOM+= crearHotelCard(hotel, ciudadE)
+        })
+
+    })
+    listaHoteles.innerHTML= hotelDOM
+    console.log(hotelesEncontrados)
 })
