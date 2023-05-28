@@ -29,25 +29,31 @@
 </head>
 <body>
     <div class="flex flex-col h-screen w-full">
-        <nav class="p-10 bg-[#f4e3c7] shadow-md flex justify-between">
-            <div><a href="">LOGO</a></div>
-            <div>
-                <ul class="flex gap-5 font-bold text-[#1a425d]">
-                    <li><a class="hover:text-[#c56a57] hover:underline transition-all ease-linear" href="">Home</a></li>
-                    <li><a class="hover:text-[#c56a57] hover:underline transition-all ease-linear" href="">Reservas</a></li>
-                    <li><a class="hover:text-[#c56a57] hover:underline transition-all ease-linear" href="">Contacto</a></li>
+        <nav class="p-10 bg-[#f4e3c7] shadow-md flex justify-between w-full mx-auto flex-wrap items-center">
+            <div class="flex"><a class="self-center" href="">LOGO</a></div>
+            <button id="toggle-menu" data-collapse-toggle="navbar" type="button" class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-[#1a425d] focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar" aria-expanded="false">
+                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+            </button>
+            <div class="hidden w-full md:block md:w-auto text-center" id="navbar">
+                <ul class="flex flex-col md:flex-row gap-5 font-bold text-[#1a425d]">
+                    <li><a class="block hover:text-[#c56a57] hover:underline transition-all ease-linear" href="">Home</a></li>
+                    <li><a class="block hover:text-[#c56a57] hover:underline transition-all ease-linear" href="">Reservas</a></li>
+                    <li><a class="block hover:text-[#c56a57] hover:underline transition-all ease-linear" href="">Contacto</a></li>
                 </ul>
             </div>
         </nav>
         <main class="flex-grow bg-gradient-to-b from-[#f2f2f2] to-white p-10">
+            <header class="flex flex-col mb-10">
+                <h1 class="font-bold text-3xl mx-auto my-0">Hospedajes en Japón</h1>
+            </header>
             <div class="flex flex-col gap-10">
-                <form action="" class="mx-auto flex gap-5 h-1/3 justify-center items-center">
+                <div class="mx-auto flex gap-5 h-1/3 justify-center items-center">
                     <label for="" class="font-bold">Ciudad:</label>
                     <input placeholder="Tokyo, Osaka...." type="text" name="" id="inputCiudad" class="w-full py-2 px-4 rounded-lg border-2 border-gray-300 focus:outline-none focus:border-gray-500
                      placeholder:font-semibold font-bold">
-                    <button id="agregar-texto" class="rounded px-4 py-2 bg-green-600 font-bold">Buscar</button>
-                </form>
-                <section id="lista-hoteles" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4">
+                </div>
+                <span id="ciudadesNoEncontradas" class="mx-auto text-lg font-bold hidden"></span>
+                <section id="lista-hoteles" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xxl:grid-cols-6 gap-x-6 gap-y-8 flex-wrap">
                 
                 </section>
             </div>
