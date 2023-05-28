@@ -6,7 +6,15 @@ const inputCiudad = document.querySelector('#inputCiudad')
 const ciudadesNoEncontradas = document.querySelector('#ciudadesNoEncontradas')
 const toggleMenu = document.querySelector('#toggle-menu')
 const navbar = document.querySelector('#navbar')
-
+const formReserva = document.getElementById('reservaHotelForm')
+const nombreHotelForm = document.getElementById('nombreHotelForm')
+const descripcionForm = document.getElementById('descripcionForm')
+const fechaIngresoInput = document.getElementById('fechaIngreso')
+const fechaSalidaInput = document.getElementById('fechaSalida')
+const cantidadPersonasInput = document.getElementById('cantidadPersonas')
+const defaultModal = document.getElementById('defaultModal')
+const cerrarModal = document.getElementById('cerrarModal')
+const botonCerrarModal = document.getElementById('botonCerrarModal')
 
 // Lista de ciudades con sus respectivos Hoteles y precios
 
@@ -39,65 +47,61 @@ const hoteles = [
                 precio: 117280,
                 descripcion: "Hotel de lujo en medio de Ginza"
             },
-        ],
-        precio: 50000
+        ]    
     },
     {
         id: 2,
         nombre: "Kyoto",
         hoteles: [
             {
-                id: 1,
+                id: 3,
                 nombre: "Hotel Resol Kyoto Kawaramachi Sanjo",
                 precio: 90459,
                 descripcion: "Hotel estilo antiguo con toques modernos"
             },
             {
-                id: 2,
+                id: 4,
                 nombre: "Hotel Resol Trinity Kyoto",
                 precio: 102412,
                 descripcion: "Hotel más moderno de Kyoto"
             },
         ],
-        precio: 35000
     },
     {   
         id: 3,
         nombre: "Osaka", 
         hoteles: [
             {
-                id: 1,
+                id: 5,
                 nombre: "Sotetsu Fresa Inn Osaka Namba",
                 precio: 65748,
                 descripcion: "Hotel al más puro estilo Edo"
             },
             {
-                id: 2,
+                id: 6,
                 nombre: "Nest Hotel Osaka Umeda",
                 precio: 58569,
                 descripcion: "Inmerso en el centro de la ciduad de Osaka"
             }
         ],
-        precio: 40000
     },
     {
         id: 4,
         nombre: "Nara",
         hoteles: [
             {
-                id: 1,
+                id: 7,
                 nombre: "Nara Royal Hotel",
                 precio: 41403,
                 descripcion: ""
             },
             {
-                id: 2,
+                id: 8,
                 nombre: "Hotel Nikko Nara",
                 precio: 60772,
                 descripcion: ""
             }
         ],
-        precio: 25000
     }
 ]
 
@@ -108,7 +112,6 @@ const dbReservas = [
         hotel: "Sotetsu Fresa Inn Ginza-Nanachome",
         cantPersonas: 2,
         precio: 160000,
-        habitacion: 202,
         nombrePersona: "Luciano Ferrando",
         fechaEntrada: (new Date("December 26, 2023 14:00:00")).toLocaleString(),
         fechaSalida:(new Date("December 30, 2023 14:00:00")).toLocaleString()
@@ -119,7 +122,6 @@ const dbReservas = [
         hotel: "Nest Hotel Osaka Umeda",
         cantPersonas: 4,
         precio: 89923,
-        habitacion: 101,
         nombrePersona: "José Pérez",
         fechaEntrada: (new Date("March 26, 2024 11:00:00")).toLocaleString(),
         fechaSalida:(new Date("March 30, 2024 14:00:00")).toLocaleString()
@@ -181,16 +183,51 @@ dbPersonas.map(dbPersona => {
     personas.push(persona)
 })
 
+
+
+function openModal(){
+    console.log('LOG MODAL')
+    defaultModal.classList.toggle('hidden')
+    
+
+}
+
+
+const toggleModalButton = (idHotel, modal) => {
+
+  
+    return (`<button id=${idHotel} 
+    onclick=${"openModal()"}
+    data-modal-target="defaultModal" data-modal-toggle="defaultModal" 
+    class="text-white bg-[#4A7674] hover:bg-[#AEC8B2] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
+    rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4A7674] dark:hover:bg-[#AEC8B2] dark:focus:ring-[#4A7674]
+    transition-all ease-in-out
+    " type="button">
+        Reservar
+    </button>`)
+}
+
+
+
+
+
 const crearHotelCard = (hotel, ciudad) => {
     let {id: idHotel, nombre: nombreHotel, precio: precioHotel, descripcion} = hotel;
-    let {id: idCiudad, nombre: nombreCiudad, precio: precioCiudad} = ciudad;
+    let {id: idCiudad, nombre: nombreCiudad} = ciudad;    
+
+    let buttonModalReserva = toggleModalButton(idHotel)
+
     let hotelCard = 
     `
-    <div class="rounded-md p-4 bg-[#cdac88] flex flex-col gap-y-4 justify-between"> 
+    <div class="card rounded-md p-4 bg-[#cdac88] flex flex-col gap-y-4 justify-between"> 
         <img src="./assets/img/Ace_Hotel_Kyoto.jpg" class="rounded" >
         <h3 class="font-bold text-lg text-[#1a425d]" >${nombreHotel}, ${nombreCiudad}</h3>
         <p class="text-sm font-semibold flex-grow justify-center">${descripcion}</p>
-        <p class="font-bold">Precio: $${precioHotel+precioCiudad}</p>
+        <div class="flex flex-col gap-4 lg:flex-row lg:gap-2 justify-between items-center"> 
+            <p class="font-bold">Precio: $${precioHotel} x noche</p>
+            ${buttonModalReserva}
+        </div>
+    
     </div>
     `;
     return hotelCard;
@@ -209,6 +246,10 @@ function listarHoteles(){
 
 document.addEventListener('DOMContentLoaded', () => {
     listaHoteles.innerHTML = listarHoteles()
+    const listaRenderHoteles = document.querySelectorAll('.card')
+    // console.log(listaRenderHoteles)
+
+
 })
 
 
@@ -220,28 +261,31 @@ toggleMenu.addEventListener('click', (e) => {
 inputCiudad.addEventListener('keyup', (e) => {
     listaHoteles.innerHTML= ``
     let nombreCiudad = e.target.value
-    
+    let hotelDOM = ``
+
+
     if(nombreCiudad != ''){
         console.log(nombreCiudad)
         let hotelesEncontrados = hoteles.filter((ciudad) => {
             return ciudad.nombre.toUpperCase().includes(nombreCiudad.toUpperCase())
         })
-        let hotelDOM = ``
     
         if(hotelesEncontrados.length > 0){
-            
-            hotelesEncontrados.forEach((ciudad) => {
+            ciudadesNoEncontradas.classList.add('hidden')
+            listaHoteles.classList.remove('hidden')
+
+            hotelesEncontrados.map((ciudad) => {
                 let ciudadE = {id: ciudad.id, nombre: ciudad.nombre, precio: ciudad.precio}
                 ciudad.hoteles.forEach(hotel => {
                     hotelDOM+= crearHotelCard(hotel, ciudadE)
                 })
-        
             })
+            console.table(hotelesEncontrados)
             listaHoteles.innerHTML= hotelDOM 
         }else{
             hotelDOM = `<p class="mx-auto"> No existen ciudades con ese nombre </p>`
-            ciudadesNoEncontradas.classList.remove('hidden')
             listaHoteles.classList.add('hidden')
+            ciudadesNoEncontradas.classList.remove('hidden')
             ciudadesNoEncontradas.innerHTML = hotelDOM
         }
     }else{
@@ -251,3 +295,30 @@ inputCiudad.addEventListener('keyup', (e) => {
         listaHoteles.innerHTML = hotelDOM
     }
 })
+
+
+cerrarModal.addEventListener('click', (e) => {
+    defaultModal.classList.toggle('hidden')
+})
+
+
+botonCerrarModal.addEventListener('click', (e) => {
+    defaultModal.classList.toggle('hidden')
+})
+
+
+window.addEventListener('click', (e) => {
+    if(e.target == defaultModal){
+        defaultModal.classList.toggle('hidden')
+    }
+})
+
+fechaIngresoInput.addEventListener('change', (e) => {
+    console.log(e.target.value)
+    console.log(typeof e.target.value)
+    const fecha = new Date(e.target.value)
+    console.log(fecha)
+})
+
+
+// listaRenderHoteles.addEventListener('')
