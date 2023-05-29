@@ -15,6 +15,7 @@ const cantidadPersonasInput = document.getElementById('cantidadPersonas')
 const defaultModal = document.getElementById('defaultModal')
 const cerrarModal = document.getElementById('cerrarModal')
 const botonCerrarModal = document.getElementById('botonCerrarModal')
+const cerrarModalButton = document.getElementById('cerrarModalButton')
 
 
 // AGREGAR LOCAL STORAGE Y/O SESSION STORAGE PARA MANIPULAR RESERVAS
@@ -185,39 +186,68 @@ dbReservas.map((dbReserva) => {
     
     reservas.push(reserva)
 })
+
 // Ingresar objetos de Persona dentro del array para poblar con datos de prueba
 dbPersonas.map(dbPersona => {
-    let persona = new Persona(dbPersona.nombre, dbPersona.edad, dbPersona.rut)
+    let persona = new Persona(dbPersona.id, dbPersona.nombre, dbPersona.edad, dbPersona.rut)
     personas.push(persona)
 })
 
+localStorage.setItem('reservas', JSON.stringify(reservas))
+localStorage.setItem('personas', JSON.stringify(personas))
 
 
 function openModal(){
     console.log('LOG MODAL')
     defaultModal.classList.toggle('hidden')
+
+    console.log(e)
     
 
 }
 
 
-const toggleModalButton = (idHotel, modal) => {
+function buscarHotel(id){
+    let hotelEncontrado = hoteles.find( (hotel) =>  {
+        
+    })
+
+    return hotelEncontrado
+}
+
+
+const $ = (selector) => document.querySelector(selector)
+
+
+
+function handleModalClick(e){
+    const target = e.target
+    if(target.tagName === 'BUTTON' && target.classList.contains('modalButton') ){
+        defaultModal.classList.toggle('hidden')
+        let id = e.target.attributes[0].value
+
+        let hotel = buscarHotel(id)
+        console.log(id)
+        console.log(hotel)
+    }
+}
+
+
+const toggleModalButton = (idHotel) => {
 
   
     return (`<button id=${idHotel} 
-    onclick=${"openModal()"}
+    
     data-modal-target="defaultModal" data-modal-toggle="defaultModal" 
     class="text-white bg-[#4A7674] hover:bg-[#AEC8B2] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
     rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4A7674] dark:hover:bg-[#AEC8B2] dark:focus:ring-[#4A7674]
-    transition-all ease-in-out
+    transition-all ease-in-out modalButton
     " type="button">
         Reservar
     </button>`)
 }
 
-
-
-
+$("#lista-hoteles").addEventListener('click', handleModalClick, true)
 
 const crearHotelCard = (hotel, ciudad) => {
     let {id: idHotel, nombre: nombreHotel, precio: precioHotel, descripcion} = hotel;
@@ -254,11 +284,10 @@ function listarHoteles(){
 
 document.addEventListener('DOMContentLoaded', () => {
     listaHoteles.innerHTML = listarHoteles()
-    const listaRenderHoteles = document.querySelectorAll('.card')
-    // console.log(listaRenderHoteles)
 
 
 })
+
 
 
 toggleMenu.addEventListener('click', (e) => {
@@ -302,11 +331,8 @@ inputCiudad.addEventListener('keyup', (e) => {
         hotelDOM = listarHoteles()
         listaHoteles.innerHTML = hotelDOM
     }
-})
 
 
-cerrarModal.addEventListener('click', (e) => {
-    defaultModal.classList.toggle('hidden')
 })
 
 
@@ -321,10 +347,14 @@ window.addEventListener('click', (e) => {
     }
 })
 
+cerrarModalButton.addEventListener('click', (e) => {
+    defaultModal.classList.toggle('hidden')
+})
+
 fechaIngresoInput.addEventListener('change', (e) => {
     console.log(e.target.value)
     console.log(typeof e.target.value)
-    const fecha = new Date(e.target.value)
+    const fecha = new Date(e.target.value).
     console.log(fecha)
 })
 
