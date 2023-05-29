@@ -16,6 +16,14 @@ const defaultModal = document.getElementById('defaultModal')
 const cerrarModal = document.getElementById('cerrarModal')
 const botonCerrarModal = document.getElementById('botonCerrarModal')
 
+
+// AGREGAR LOCAL STORAGE Y/O SESSION STORAGE PARA MANIPULAR RESERVAS
+// Se podría usar el local storage para almacenar las reservas de forma persistente (total)
+// Y usar el session storage para primero almacenar el del momento, que al finalizar
+// irá al local storage
+
+
+console.log(localStorage)
 // Lista de ciudades con sus respectivos Hoteles y precios
 
 // TOKYO
