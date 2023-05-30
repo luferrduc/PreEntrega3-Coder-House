@@ -215,44 +215,26 @@ function crearPersona(){
     let rutPersona = rutPersonaInput.value
     let nombrePersona = nombrePersonaInput.value
     
-    let nombre = prompt("Ingresa tu nombre:")
-    while(!nombreInvalido){
-        if(nombre){
-            nombreInvalido = true
-        }else{
-            alert("El nombre es un campo obligatorio")
-            nombre = prompt("Ingresa tu nombre: ")
-        }
-    }
-    console.log("Nombre correcto", nombre)
-    let edad = parseInt(prompt("Ingresa tu edad: "))
-    while(!edadInvalida){
-        if(edad > 1 && edad <= 100){
-            edadInvalida = true
-        }else{
-            alert("La edad que ingresaste no es válida, ingresa nuevamente")
-            edad = parseInt(prompt("Ingresa tu edad: "))
-        }
-    }
-    let rut = prompt("Ingresa tu Rut (sin puntos y con guión) o DNI: ")
-    while(!rutInvalido){
-        if(rut){
-            rutInvalido = true
-        }else{
-            alert("El campo es obligatorio")
-            rut = prompt("Ingresa tu Rut (sin puntos y con guión) o DNI: ")
-        }
-    }
-
-
+    let cantidadPersonasInscrits = personas.length
+    let id = cantidadPersonasInscrits + 1
     let persona = buscarPersona(rut)
+
     if(!persona){
-        persona = new Persona(nombre, edad, rut)
-        localStorage.getItem('personas').push()
+        persona = new Persona(id, nombrePersona, edadPersona, rutPersona)
+        personas.push(persona)
+        localStorage.getItem('personas')
         personas.push(persona)
         console.log("Creando Persona")
     }
     return persona
+}
+
+function crearReserva(){
+    let personaCreada =  crearPersona()
+
+
+
+    return personaCreada
 }
 
 function buscarPersona(rut){
@@ -301,12 +283,7 @@ function handleModalClick(e){
         nombreHotelForm.innerText = `${hotel?.hotel?.nombre}, ${hotel?.ciudad?.nombreCiudad}`
         descripcionForm.innerHTML= `
         <p class="font-bold text-lg text-slate-300">${hotel?.hotel?.descripcion}</p>
-        <p class="font-bold text-xl text-slate-300"> <span class="text-black" >$</span> ${hotel?.hotel?.precio} x noche</p> `
-        // console.log(fechaSalidaInput.disabled)
-        // console.log(fechaIngresoInput.value) 
-
-
-     
+        <p class="font-bold text-xl text-slate-300"> <span class="text-black" >$</span> ${hotel?.hotel?.precio} x noche</p>`
     }
 }
 
@@ -379,6 +356,9 @@ fechaIngresoInput.addEventListener('change', (e)  => {
 formReserva.addEventListener('submit', (e) => {
     e.preventDefault()
 
+    if(rutPersonaInput != '' && nombrePersonaInput != '' && cantidadPersonasInput !=  '' &&  fechaIngresoInput !=  '' && fechaSalidaInput != '' ){
+        crearReserva()
+    }
     console.log(e)
 })
 
