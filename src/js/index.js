@@ -1,7 +1,13 @@
-//  Variables del DOM
+// IMPORTS
 
+import dbPersonas from "./dbPersonas.js"
+
+// LUXON PARA MANEJO DE <FECHAS></FECHAS>
+const DateTime = luxon.DateTime
+
+
+//  Variables del DOM
 const listaHoteles = document.querySelector('#lista-hoteles')
-const agregarTexto  = document.querySelector("#agregar-texto")
 const inputCiudad = document.querySelector('#inputCiudad')
 const ciudadesNoEncontradas = document.querySelector('#ciudadesNoEncontradas')
 const toggleMenu = document.querySelector('#toggle-menu')
@@ -16,7 +22,10 @@ const defaultModal = document.getElementById('defaultModal')
 const cerrarModal = document.getElementById('cerrarModal')
 const botonCerrarModal = document.getElementById('botonCerrarModal')
 const cerrarModalButton = document.getElementById('cerrarModalButton')
-
+// Datos Persona
+const rutPersonaInput = document.getElementById('rutPersona')
+const nombrePersonaInput = document.getElementById('nombrePersona')
+const edadPersonaInput = document.getElementById('edadPersona')
 
 // AGREGAR LOCAL STORAGE Y/O SESSION STORAGE PARA MANIPULAR RESERVAS
 // Se podría usar el local storage para almacenar las reservas de forma persistente (total)
@@ -24,7 +33,7 @@ const cerrarModalButton = document.getElementById('cerrarModalButton')
 // irá al local storage
 
 
-console.log(localStorage)
+// console.log(localStorage)
 // Lista de ciudades con sus respectivos Hoteles y precios
 
 // TOKYO
@@ -45,13 +54,13 @@ const hoteles = [
         nombre: "Tokyo",
         hoteles: [
             {
-                id: 1,
+                id: 10,
                 nombre: "Sotetsu Fresa Inn Ginza-Nanachome",
                 precio: 85294,
                 descripcion: "Buen hotel inmerso en Ginza"
             },
             {
-                id: 2,
+                id: 20,
                 nombre: "The Square Hotel GINZA",
                 precio: 117280,
                 descripcion: "Hotel de lujo en medio de Ginza"
@@ -63,13 +72,13 @@ const hoteles = [
         nombre: "Kyoto",
         hoteles: [
             {
-                id: 3,
+                id: 30,
                 nombre: "Hotel Resol Kyoto Kawaramachi Sanjo",
                 precio: 90459,
                 descripcion: "Hotel estilo antiguo con toques modernos"
             },
             {
-                id: 4,
+                id: 40,
                 nombre: "Hotel Resol Trinity Kyoto",
                 precio: 102412,
                 descripcion: "Hotel más moderno de Kyoto"
@@ -81,13 +90,13 @@ const hoteles = [
         nombre: "Osaka", 
         hoteles: [
             {
-                id: 5,
+                id: 50,
                 nombre: "Sotetsu Fresa Inn Osaka Namba",
                 precio: 65748,
                 descripcion: "Hotel al más puro estilo Edo"
             },
             {
-                id: 6,
+                id: 60,
                 nombre: "Nest Hotel Osaka Umeda",
                 precio: 58569,
                 descripcion: "Inmerso en el centro de la ciduad de Osaka"
@@ -99,13 +108,13 @@ const hoteles = [
         nombre: "Nara",
         hoteles: [
             {
-                id: 7,
+                id: 70,
                 nombre: "Nara Royal Hotel",
                 precio: 41403,
                 descripcion: ""
             },
             {
-                id: 8,
+                id: 80,
                 nombre: "Hotel Nikko Nara",
                 precio: 60772,
                 descripcion: ""
@@ -137,15 +146,15 @@ const dbReservas = [
     }
 ]
 
-const dbPersonas = [
-    {
-        id: 1,
-        rut: "18621142-1",
-        nombre: "Luciano Ferrando",
-        email: "luciano.ferrando94@gmail.com",
-        edad: 29
-    }
-]
+// const dbPersonas = [
+//     {
+//         id: 1,
+//         rut: "18621142-1",
+//         nombre: "Luciano Ferrando",
+//         email: "luciano.ferrando94@gmail.com",
+//         edad: 29
+//     }
+// ]
 
 function generarID(){ 
     return Math.random().toString(30).substring(2);           
@@ -201,18 +210,84 @@ function openModal(){
     console.log('LOG MODAL')
     defaultModal.classList.toggle('hidden')
 
-    console.log(e)
+    // console.log(e)
     
 
 }
 
+function crearPersona(){
+    let edadInvalida = false
+    let rutInvalido = false
+    let nombreInvalido = false
+    
+    
+    let nombre = prompt("Ingresa tu nombre:")
+    while(!nombreInvalido){
+        if(nombre){
+            nombreInvalido = true
+        }else{
+            alert("El nombre es un campo obligatorio")
+            nombre = prompt("Ingresa tu nombre: ")
+        }
+    }
+    console.log("Nombre correcto", nombre)
+    let edad = parseInt(prompt("Ingresa tu edad: "))
+    while(!edadInvalida){
+        if(edad > 1 && edad <= 100){
+            edadInvalida = true
+        }else{
+            alert("La edad que ingresaste no es válida, ingresa nuevamente")
+            edad = parseInt(prompt("Ingresa tu edad: "))
+        }
+    }
+    let rut = prompt("Ingresa tu Rut (sin puntos y con guión) o DNI: ")
+    while(!rutInvalido){
+        if(rut){
+            rutInvalido = true
+        }else{
+            alert("El campo es obligatorio")
+            rut = prompt("Ingresa tu Rut (sin puntos y con guión) o DNI: ")
+        }
+    }
 
-function buscarHotel(id){
-    let hotelEncontrado = hoteles.find( (hotel) =>  {
-        
-    })
 
-    return hotelEncontrado
+    let persona = buscarPersona(rut)
+    if(!persona){
+        persona = new Persona(nombre, edad, rut)
+        localStorage.getItem('personas').push()
+        personas.push(persona)
+        console.log("Creando Persona")
+    }
+    return persona
+}
+
+function buscarPersona(rut){
+
+    let personasStorage = JSON.parse(localStorage.getItem('personas'))
+
+    let personaExiste = personasStorage.find(persona => persona.rut == rut)
+
+    return personaExiste
+}
+
+
+function buscarHotel(idBusca){
+    let hotelCiudad = {}
+
+    for (const ciudad of hoteles) {
+        let hotelE = ciudad.hoteles.find( (hotel) => {
+            // console.log(hotel, hotel.id, idBusca)
+            return parseInt(hotel.id) == parseInt(idBusca)
+        }) 
+        if(hotelE){
+            let {id: idCiudad, nombre: nombreCiudad} = ciudad
+            hotelCiudad.ciudad = {idCiudad, nombreCiudad}
+            hotelCiudad.hotel = hotelE
+            break
+        }
+    }
+    // console.log(hotelCiudad)
+    return hotelCiudad
 }
 
 
@@ -220,24 +295,26 @@ const $ = (selector) => document.querySelector(selector)
 
 
 
+// Función para ejecutar dentro del evento de los botones dinámicos
 function handleModalClick(e){
     const target = e.target
     if(target.tagName === 'BUTTON' && target.classList.contains('modalButton') ){
         defaultModal.classList.toggle('hidden')
+        // console.log(e)
         let id = e.target.attributes[0].value
-
         let hotel = buscarHotel(id)
-        console.log(id)
-        console.log(hotel)
+        // console.log(hotel.ciudad)
+        nombreHotelForm.innerText = `${hotel?.hotel?.nombre}, ${hotel?.ciudad?.nombreCiudad}`
+        descripcionForm.innerHTML= `
+        <p class="font-bold text-lg text-black">${hotel?.hotel?.descripcion}</p>
+        <p class="font-bold text-xl text-black">$${hotel?.hotel?.precio} x noche</p> `
     }
 }
 
-
+// Crear botón que abrirá el modal de cada uno de los hoteles
 const toggleModalButton = (idHotel) => {
 
-  
-    return (`<button id=${idHotel} 
-    
+    return (`<button id=${idHotel}    
     data-modal-target="defaultModal" data-modal-toggle="defaultModal" 
     class="text-white bg-[#4A7674] hover:bg-[#AEC8B2] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
     rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4A7674] dark:hover:bg-[#AEC8B2] dark:focus:ring-[#4A7674]
@@ -246,6 +323,8 @@ const toggleModalButton = (idHotel) => {
         Reservar
     </button>`)
 }
+
+// Agregar evento a elementos dinámicos
 
 $("#lista-hoteles").addEventListener('click', handleModalClick, true)
 
@@ -282,13 +361,13 @@ function listarHoteles(){
     return hotelesDOM
 }
 
+
+// EVENTOS 
 document.addEventListener('DOMContentLoaded', () => {
     listaHoteles.innerHTML = listarHoteles()
 
 
 })
-
-
 
 toggleMenu.addEventListener('click', (e) => {
     navbar.classList.toggle('hidden')
@@ -299,7 +378,6 @@ inputCiudad.addEventListener('keyup', (e) => {
     listaHoteles.innerHTML= ``
     let nombreCiudad = e.target.value
     let hotelDOM = ``
-
 
     if(nombreCiudad != ''){
         console.log(nombreCiudad)
@@ -335,6 +413,21 @@ inputCiudad.addEventListener('keyup', (e) => {
 
 })
 
+rutPersonaInput.addEventListener('keyup', (e) => {
+    let rutBusqueda = e.target.value
+    let persona = buscarPersona(rutBusqueda)
+
+    if(persona){
+        nombrePersonaInput.value = persona.nombre
+        edadPersonaInput.value = persona.edad
+    }else{
+        nombrePersonaInput.value = ''  
+        edadPersonaInput.value = ''
+    }
+})
+
+
+// EVENTOS DE CIERRE Y APERTURA MODAL
 
 botonCerrarModal.addEventListener('click', (e) => {
     defaultModal.classList.toggle('hidden')
@@ -352,11 +445,9 @@ cerrarModalButton.addEventListener('click', (e) => {
 })
 
 fechaIngresoInput.addEventListener('change', (e) => {
-    console.log(e.target.value)
-    console.log(typeof e.target.value)
-    const fecha = new Date(e.target.value).
-    console.log(fecha)
+    // console.log(e.target.value)
+    // console.log(typeof e.target.value)
+    // const fecha = new Date(e.target.value).
+    // console.log(fecha)
 })
 
-
-// listaRenderHoteles.addEventListener('')

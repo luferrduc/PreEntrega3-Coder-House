@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "./src/index.html",
+  "type": "module",
   "scripts": {
     "dev": "tailwindcss -i ./src/input.css -o ./src/css/style.css --watch"
   },
