@@ -2,7 +2,7 @@
 
 import dbPersonas from "./dbPersonas.js"
 
-// LUXON PARA MANEJO DE <FECHAS></FECHAS>
+// LUXON PARA MANEJO DE FECHAS
 const DateTime = luxon.DateTime
 
 
@@ -206,20 +206,14 @@ localStorage.setItem('reservas', JSON.stringify(reservas))
 localStorage.setItem('personas', JSON.stringify(personas))
 
 
-function openModal(){
-    console.log('LOG MODAL')
-    defaultModal.classList.toggle('hidden')
-
-    // console.log(e)
-    
-
+function calcularValorReserva(){
+   
 }
 
 function crearPersona(){
-    let edadInvalida = false
-    let rutInvalido = false
-    let nombreInvalido = false
-    
+    let edadPersona = parseInt(edadPersonaInput.value)
+    let rutPersona = rutPersonaInput.value
+    let nombrePersona = nombrePersonaInput.value
     
     let nombre = prompt("Ingresa tu nombre:")
     while(!nombreInvalido){
@@ -290,7 +284,7 @@ function buscarHotel(idBusca){
     return hotelCiudad
 }
 
-
+// Función que me permite luego usar para los eventos dinámicos
 const $ = (selector) => document.querySelector(selector)
 
 
@@ -300,27 +294,32 @@ function handleModalClick(e){
     const target = e.target
     if(target.tagName === 'BUTTON' && target.classList.contains('modalButton') ){
         defaultModal.classList.toggle('hidden')
-        // console.log(e)
+       
         let id = e.target.attributes[0].value
         let hotel = buscarHotel(id)
-        // console.log(hotel.ciudad)
+
         nombreHotelForm.innerText = `${hotel?.hotel?.nombre}, ${hotel?.ciudad?.nombreCiudad}`
         descripcionForm.innerHTML= `
-        <p class="font-bold text-lg text-black">${hotel?.hotel?.descripcion}</p>
-        <p class="font-bold text-xl text-black">$${hotel?.hotel?.precio} x noche</p> `
+        <p class="font-bold text-lg text-slate-300">${hotel?.hotel?.descripcion}</p>
+        <p class="font-bold text-xl text-slate-300"> <span class="text-black" >$</span> ${hotel?.hotel?.precio} x noche</p> `
+        // console.log(fechaSalidaInput.disabled)
+        // console.log(fechaIngresoInput.value) 
+
+
+     
     }
 }
 
 // Crear botón que abrirá el modal de cada uno de los hoteles
 const toggleModalButton = (idHotel) => {
-
+    
     return (`<button id=${idHotel}    
     data-modal-target="defaultModal" data-modal-toggle="defaultModal" 
     class="text-white bg-[#4A7674] hover:bg-[#AEC8B2] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
     rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4A7674] dark:hover:bg-[#AEC8B2] dark:focus:ring-[#4A7674]
     transition-all ease-in-out modalButton
     " type="button">
-        Reservar
+    Reservar
     </button>`)
 }
 
@@ -331,19 +330,19 @@ $("#lista-hoteles").addEventListener('click', handleModalClick, true)
 const crearHotelCard = (hotel, ciudad) => {
     let {id: idHotel, nombre: nombreHotel, precio: precioHotel, descripcion} = hotel;
     let {id: idCiudad, nombre: nombreCiudad} = ciudad;    
-
+    
     let buttonModalReserva = toggleModalButton(idHotel)
-
+    
     let hotelCard = 
     `
     <div class="card rounded-md p-4 bg-[#cdac88] flex flex-col gap-y-4 justify-between"> 
-        <img src="./assets/img/Ace_Hotel_Kyoto.jpg" class="rounded" >
-        <h3 class="font-bold text-lg text-[#1a425d]" >${nombreHotel}, ${nombreCiudad}</h3>
-        <p class="text-sm font-semibold flex-grow justify-center">${descripcion}</p>
-        <div class="flex flex-col gap-4 lg:flex-row lg:gap-2 justify-between items-center"> 
-            <p class="font-bold">Precio: $${precioHotel} x noche</p>
-            ${buttonModalReserva}
-        </div>
+    <img src="./assets/img/Ace_Hotel_Kyoto.jpg" class="rounded" >
+    <h3 class="font-bold text-lg text-[#1a425d]" >${nombreHotel}, ${nombreCiudad}</h3>
+    <p class="text-sm font-semibold flex-grow justify-center">${descripcion}</p>
+    <div class="flex flex-col gap-4 lg:flex-row lg:gap-2 justify-between items-center"> 
+    <p class="font-bold">Precio: $${precioHotel} x noche</p>
+    ${buttonModalReserva}
+    </div>
     
     </div>
     `;
@@ -363,15 +362,34 @@ function listarHoteles(){
 
 
 // EVENTOS 
+
+fechaIngresoInput.addEventListener('change', (e)  => {
+    if(fechaIngresoInput.value != '')
+    {   
+        // console.log(fechaIngresoInput.value)
+        fechaSalidaInput.disabled = false
+        // console.log("ANTES", fechaSalidaInput.min)
+        fechaSalidaInput.min = DateTime.fromISO(fechaIngresoInput.value).plus({days: 1}).toISO({includeOffset: false,  suppressMilliseconds: true, suppressSeconds: true})
+        // console.log("DESPUES", fechaSalidaInput.min)
+    }
+    // console.log(fechaIngresoInput.value)
+})
+
+// EVENTO FORMULARIO PARA CREAR RESERVA
+formReserva.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    console.log(e)
+})
+
 document.addEventListener('DOMContentLoaded', () => {
     listaHoteles.innerHTML = listarHoteles()
-
-
+    console.log(fechaSalidaInput)
 })
 
 toggleMenu.addEventListener('click', (e) => {
     navbar.classList.toggle('hidden')
-
+   
 })
 
 inputCiudad.addEventListener('keyup', (e) => {
@@ -417,7 +435,17 @@ rutPersonaInput.addEventListener('keyup', (e) => {
     let rutBusqueda = e.target.value
     let persona = buscarPersona(rutBusqueda)
 
-    if(persona){
+    if(persona && rutBusqueda != '' ){
+        const swalButton = Swal.mixin({
+            customClass: {
+              confirmButton: 'py-2 px-6 bg-[#4A7674] hover:bg-[#AEC8B2] rounded text-white font-bold transition-all ease-in-out focus:ring-2 focus:outline-none focus:ring-[#4A7674]',
+            },
+            buttonsStyling: false
+          })
+        swalButton.fire({
+            title: 'Datos cargados exitosamente',
+            icon: 'success',  
+          })
         nombrePersonaInput.value = persona.nombre
         edadPersonaInput.value = persona.edad
     }else{

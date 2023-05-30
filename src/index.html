@@ -66,7 +66,7 @@
                 <div class="relative bg-[#1a425d] rounded-lg shadow dark:bg-[#1a425d]">
                     <!-- Modal header -->
                     <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white" id="nombreHotelForm">
+                        <h3 class="text-2xl text-white dark:text-white font-bold" id="nombreHotelForm">
                            
                         </h3>
                         <button id="cerrarModalButton" type="button" class="text-gray-400 bg-transparent hover:bg-red-400 hover:text-gray-900 focus:bg-red-200 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-red-600 dark:hover:text-white" data-modal-hide="defaultModal">
@@ -76,49 +76,55 @@
                     </div>
                     <!-- Modal body -->
                     <div class="p-6 space-y-6 font-bold">
-                        <div class="text-base leading-relaxed text-white dark:white" id="descripcionForm">
+                        <div class="text-base leading-relaxed text-white dark:text-white" id="descripcionForm">
                            
                         </div>
                         <form action="" class="flex flex-col gap-y-5 " id="reservaHotelForm">
                             <div class="flex flex-col gap-5 border-b-[1px] border-gray-500 py-4">
-                                <p class="text-white">Datos Personales</p>
+                                <p class="text-white font-bold text-xl decoration-slate-300 underline">Datos Personales</p>
                                 <div class="flex gap-5">
                                     <label for="rutPersona" class="text-white">RUT/DNI:</label>
-                                    <input type="text" id="rutPersona" name="rutPersona" class="border-2 border-gray-500">
+                                    <input required type="text" id="rutPersona" name="rutPersona" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="19123456-7">
+                                    <p id="errorRut" class="text-red-500 hidden"></p>
                                 </div>
+                                <!-- <input class="focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none w-full text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md py-2 pl-10 ring-1 ring-slate-200 shadow-sm" type="text" aria-label="Filter projects" placeholder="Filter projects..."> -->
+
                                 <div class="flex gap-5">
                                     <label for="nombrePersona" class="text-white">Nombre Completo:</label>
-                                    <input type="text" id="nombrePersona" name="nombrePersona">
+                                    <input required type="text" id="nombrePersona" name="nombrePersona" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="Jorge Felipe Gonzalez Sosa">
+                                    <p id="errorNombre" class="text-red-500 hidden"></p>
                                 </div>
                                 <div class="flex gap-5">
                                     <label for="edadPersona" class="text-white">Edad:</label>
-                                    <input type="number" id="edadPersona" min="14" max="100" name="edadPersona">
+                                    <input required type="number" id="edadPersona" min="14" max="100" name="edadPersona" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="25">
+                                    <p id="errorEdad" class="text-red-500 hidden"></p>
                                 </div>
                             </div>
                             <div class="flex gap-5">
-                                <label for="cantidadPersonas" class="text-white">Cantidad de personas</label>
-                                <input type="number" id="cantidadPersonas" min="1" max="10" >
+                                <label for="cantidadPersonas" class="text-white">Cantidad de personas:</label>
+                                <input required type="number" id="cantidadPersonas" min="1" max="10" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="2">
+                                <p id="errorCantidad" class="text-red-500 hidden"></p>
                             </div>
                             <div class="flex gap-5">
-                                <label for="">Fecha ingreso</label>
-                                <input type="datetime-local" id="fechaIngreso" >
+                                <label for="fechaIngreso" class="text-white">Fecha ingreso:</label>
+                                <input required type="datetime-local" id="fechaIngreso" name="fechaIngreso" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal">
                             </div>
                             <div class="flex gap-5">
-                                <label for="">Fecha salida</label>
-                                <input type="date" id="fechaSalida" min="fechaIngreso">
+                                <label for="fechaSalida" class="text-white">Fecha salida:</label>
+                                <input required type="datetime-local" id="fechaSalida" name="fechaSalida"  disabled class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal">
                             </div>    
                             <div id="valorFinal">
                             </div>
                             <!-- <button type="submit" id="buttonReserva">Reservar</button> -->
+                            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                <button id="botonReservar" data-modal-hide="defaultModal" type="submit" 
+                                class="text-white bg-[#4A7674] hover:bg-[#AEC8B2] focus:ring-4 focus:outline-none focus:ring-[#4A7674] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4A7674] dark:hover:bg-[#AEC8B2] dark:focus:ring-[#4A7674] transition-all ease-in-out">Reservar</button>
+                                <button id="botonCerrarModal" data-modal-hide="defaultModal" type="button" 
+                                class="text-gray-500 bg-[#c56a57] hover:bg-red-300 focus:ring-4 focus:outline-none focus:ring-red-600 rounded-lg border border-red-400 text-sm font-medium px-5 py-2.5 hover:text-white focus:z-10 dark:bg-red-400 dark:text-white dark:border-red-600 dark:hover:text-white dark:hover:bg-red-700 dark:focus:ring-red-600 transition-all ease-in-out">Cerrar</button>
+                            </div>
                         </form>
                     </div>
                     <!-- Modal footer -->
-                    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                        <button id="botonReservar" data-modal-hide="defaultModal" type="button" 
-                        class="text-white bg-[#4A7674] hover:bg-[#AEC8B2] focus:ring-4 focus:outline-none focus:ring-[#4A7674] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4A7674] dark:hover:bg-[#AEC8B2] dark:focus:ring-[#4A7674] transition-all ease-in-out">Reservar</button>
-                        <button id="botonCerrarModal" data-modal-hide="defaultModal" type="button" 
-                        class="text-gray-500 bg-[#c56a57] hover:bg-red-300 focus:ring-4 focus:outline-none focus:ring-red-600 rounded-lg border border-red-400 text-sm font-medium px-5 py-2.5 hover:text-white focus:z-10 dark:bg-red-400 dark:text-white dark:border-red-600 dark:hover:text-white dark:hover:bg-red-700 dark:focus:ring-red-600 transition-all ease-in-out">Cerrar</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -128,5 +134,7 @@
     <script src="
     https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js
     "></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
 </html>  
