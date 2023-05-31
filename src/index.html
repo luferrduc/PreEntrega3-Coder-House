@@ -38,7 +38,7 @@
                 <ul class="flex flex-col md:flex-row gap-5 font-bold text-[#1a425d]">
                     <li><a class="block hover:text-[#c56a57] hover:underline transition-all ease-linear" href="#">Home</a></li>
                     <li><a class="block hover:text-[#c56a57] hover:underline transition-all ease-linear" href="./pages/reservas.html">Reservas</a></li>
-                    <li><a class="block hover:text-[#c56a57] hover:underline transition-all ease-linear" href="">Contacto</a></li>
+                    <li><a class="block hover:text-[#c56a57] hover:underline transition-all ease-linear" href="./pages/contacto.html">Contacto</a></li>
                 </ul>
             </div>
         </nav>
@@ -84,30 +84,30 @@
                                 <p class="text-white font-bold text-xl decoration-slate-300 underline">Datos Personales</p>
                                 <div class="flex gap-5">
                                     <label for="rutPersona" class="text-white">RUT/DNI:</label>
-                                    <input required type="text" id="rutPersona" name="rutPersona" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="19123456-7">
+                                    <input required type="text" id="rutPersona" name="rutPersona" minlength="9" maxlength="11" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="19123456-7">
                                     <p id="errorRut" class="text-red-500 hidden"></p>
                                 </div>
                                 <!-- <input class="focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none w-full text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md py-2 pl-10 ring-1 ring-slate-200 shadow-sm" type="text" aria-label="Filter projects" placeholder="Filter projects..."> -->
 
                                 <div class="flex gap-5">
                                     <label for="nombrePersona" class="text-white">Nombre Completo:</label>
-                                    <input required type="text" id="nombrePersona" name="nombrePersona" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="Jorge Felipe Gonzalez Sosa">
+                                    <input required type="text" id="nombrePersona" name="nombrePersona" minlength="5" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="Jorge Felipe Gonzalez Sosa">
                                     <p id="errorNombre" class="text-red-500 hidden"></p>
                                 </div>
                                 <div class="flex gap-5">
                                     <label for="edadPersona" class="text-white">Edad:</label>
-                                    <input required type="number" id="edadPersona" min="14" max="100" name="edadPersona" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="25">
+                                    <input required type="number" id="edadPersona" min="14" max="100" minlength="2" maxlength="3" name="edadPersona" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="25">
                                     <p id="errorEdad" class="text-red-500 hidden"></p>
                                 </div>
                             </div>
                             <div class="flex gap-5">
                                 <label for="cantidadPersonas" class="text-white">Cantidad de personas:</label>
-                                <input required type="number" id="cantidadPersonas" min="1" max="10" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="2">
+                                <input required type="number" id="cantidadPersonas" min="1" max="10" minlength="1" maxlength="2" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal" placeholder="2">
                                 <p id="errorCantidad" class="text-red-500 hidden"></p>
                             </div>
                             <div class="flex gap-5">
                                 <label for="fechaIngreso" class="text-white">Fecha ingreso:</label>
-                                <input required type="datetime-local" id="fechaIngreso" name="fechaIngreso" class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal">
+                                <input required type="datetime-local" id="fechaIngreso" name="fechaIngreso"  class="focus:ring-2 focus:ring-[#de4c45] focus:outline-none appearance-none text-sm text-slate-900 placeholder-slate-400 rounded-md py-1 pl-2 ring-1 ring-slate-200 shadow-sm placeholder:font-normal">
                             </div>
                             <div class="flex gap-5">
                                 <label for="fechaSalida" class="text-white">Fecha salida:</label>

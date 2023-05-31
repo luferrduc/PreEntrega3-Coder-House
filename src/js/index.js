@@ -215,26 +215,53 @@ function crearPersona(){
     let rutPersona = rutPersonaInput.value
     let nombrePersona = nombrePersonaInput.value
     
-    let cantidadPersonasInscrits = personas.length
-    let id = cantidadPersonasInscrits + 1
-    let persona = buscarPersona(rut)
+    let cantidadPersonasInscritas = personas.length
+    let id = cantidadPersonasInscritas + 1
+    let persona = buscarPersona(rutPersona)
 
     if(!persona){
         persona = new Persona(id, nombrePersona, edadPersona, rutPersona)
-        personas.push(persona)
-        localStorage.getItem('personas')
-        personas.push(persona)
+        // personas.push(persona)
+        // localStorage.getItem('personas')
+        // personas.push(persona)
+        console.log(persona)
         console.log("Creando Persona")
     }
     return persona
 }
 
-function crearReserva(){
+function buscarReserva(id){
+    let reservas = JSON.parse(localStorage.getItem('reservas'))
+
+    let reservaEncontrada = reservas.some( (reserva) => {
+        return reserva.id == id
+    })
+
+    return reservaEncontrada
+}
+
+function crearReserva(idHotel, rutPersona, cantidadPersonas, fechaIngreso, fechaSalida ){
+
     let personaCreada =  crearPersona()
+    let hotelCiudad = buscarHotel(idHotel)
 
+    let {ciudad, hotel} = hotelCiudad
+    // id, ciudad, hotel, cantPersonas, precio, nombrePersona, fechaEntrada, fechaSalida
+    let idReserva = generarID()
+    let repetir = buscarReserva(idReserva)
+ 
+    while(repetir){
+        repetir = buscarReserva(idReserva)
+        idReserva = generarID()
+    }
+    let reservasLocal = JSON.parse(localStorage.getItem('reservas'))
+    // console.log(reservasLocal)
 
+    let reserva = new Reserva(idReserva, ciudad.nombreCiudad, hotel.nombre, parseInt(cantidadPersonas), hotel.precio, personaCreada.nombre, fechaIngreso, fechaSalida)
+    reservasLocal.push(reserva)
+    localStorage.setItem('reservas', JSON.stringify(reservasLocal))
 
-    return personaCreada
+    return reserva
 }
 
 function buscarPersona(rut){
@@ -280,23 +307,27 @@ function handleModalClick(e){
         let id = e.target.attributes[0].value
         let hotel = buscarHotel(id)
 
-        nombreHotelForm.innerText = `${hotel?.hotel?.nombre}, ${hotel?.ciudad?.nombreCiudad}`
+        nombreHotelForm.innerHTML = `<span class="hidden">${id}</span><p>${hotel?.hotel?.nombre}, ${hotel?.ciudad?.nombreCiudad}</p>`
         descripcionForm.innerHTML= `
+        
         <p class="font-bold text-lg text-slate-300">${hotel?.hotel?.descripcion}</p>
         <p class="font-bold text-xl text-slate-300"> <span class="text-black" >$</span> ${hotel?.hotel?.precio} x noche</p>`
     }
+
+
 }
 
 // Crear botón que abrirá el modal de cada uno de los hoteles
 const toggleModalButton = (idHotel) => {
     
-    return (`<button id=${idHotel}    
+    return (
+    `<button id=${idHotel}    
     data-modal-target="defaultModal" data-modal-toggle="defaultModal" 
     class="text-white bg-[#4A7674] hover:bg-[#AEC8B2] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium 
     rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4A7674] dark:hover:bg-[#AEC8B2] dark:focus:ring-[#4A7674]
-    transition-all ease-in-out modalButton
-    " type="button">
-    Reservar
+    transition-all ease-in-out modalButton" 
+    type="button">
+        Reservar
     </button>`)
 }
 
@@ -313,14 +344,13 @@ const crearHotelCard = (hotel, ciudad) => {
     let hotelCard = 
     `
     <div class="card rounded-md p-4 bg-[#cdac88] flex flex-col gap-y-4 justify-between"> 
-    <img src="./assets/img/Ace_Hotel_Kyoto.jpg" class="rounded" >
-    <h3 class="font-bold text-lg text-[#1a425d]" >${nombreHotel}, ${nombreCiudad}</h3>
-    <p class="text-sm font-semibold flex-grow justify-center">${descripcion}</p>
-    <div class="flex flex-col gap-4 lg:flex-row lg:gap-2 justify-between items-center"> 
-    <p class="font-bold">Precio: $${precioHotel} x noche</p>
-    ${buttonModalReserva}
-    </div>
-    
+        <img src="./assets/img/Ace_Hotel_Kyoto.jpg" class="rounded" >
+        <h3 class="font-bold text-lg text-[#1a425d]" >${nombreHotel}, ${nombreCiudad}</h3>
+        <p class="text-sm font-semibold flex-grow justify-center">${descripcion}</p>
+        <div class="flex flex-col gap-4 lg:flex-row lg:gap-2 justify-between items-center"> 
+            <p class="font-bold">Precio: $${precioHotel} x noche</p>
+            ${buttonModalReserva}
+        </div>
     </div>
     `;
     return hotelCard;
@@ -331,8 +361,7 @@ function listarHoteles(){
     hoteles.map((ciudad) => {
         ciudad.hoteles.forEach(hotel => {
             hotelesDOM += crearHotelCard(hotel, ciudad)
-        })
-        
+        })    
     })
     return hotelesDOM
 }
@@ -347,6 +376,8 @@ fechaIngresoInput.addEventListener('change', (e)  => {
         fechaSalidaInput.disabled = false
         // console.log("ANTES", fechaSalidaInput.min)
         fechaSalidaInput.min = DateTime.fromISO(fechaIngresoInput.value).plus({days: 1}).toISO({includeOffset: false,  suppressMilliseconds: true, suppressSeconds: true})
+        fechaSalidaInput.max = DateTime.local().plus({years: 10}).toFormat('yyyy-MM-dd\'T\'HH:mm')
+        console.log(fechaSalidaInput.max)
         // console.log("DESPUES", fechaSalidaInput.min)
     }
     // console.log(fechaIngresoInput.value)
@@ -355,16 +386,22 @@ fechaIngresoInput.addEventListener('change', (e)  => {
 // EVENTO FORMULARIO PARA CREAR RESERVA
 formReserva.addEventListener('submit', (e) => {
     e.preventDefault()
+    let idHotel = parseInt(nombreHotelForm.firstChild.textContent)
 
-    if(rutPersonaInput != '' && nombrePersonaInput != '' && cantidadPersonasInput !=  '' &&  fechaIngresoInput !=  '' && fechaSalidaInput != '' ){
-        crearReserva()
+    console.log(localStorage.getItem('reservas'))
+    if(rutPersonaInput.value != '' && nombrePersonaInput.value != '' && cantidadPersonasInput.value !=  '' &&  fechaIngresoInput.value  !=  '' && fechaSalidaInput.value  != '' ){
+        crearReserva(idHotel, rutPersonaInput.value , cantidadPersonasInput.value , fechaIngresoInput.value , fechaSalidaInput.value  )
     }
-    console.log(e)
+    // console.log(e)
 })
 
 document.addEventListener('DOMContentLoaded', () => {
     listaHoteles.innerHTML = listarHoteles()
-    console.log(fechaSalidaInput)
+    let fechaActual = DateTime.local().toFormat('yyyy-MM-dd\'T\'HH:mm');
+    fechaIngresoInput.min = fechaActual
+    fechaIngresoInput.max = DateTime.local().plus({years: 10}).toFormat('yyyy-MM-dd\'T\'HH:mm');
+    fechaSalidaInput.max = DateTime.local().plus({years: 11}).toFormat('yyyy-MM-dd\'T\'HH:mm');
+    
 })
 
 toggleMenu.addEventListener('click', (e) => {
