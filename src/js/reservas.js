@@ -26,8 +26,8 @@ const crearReservaCard = (reserva) => {
     <div class="card rounded-md p-4 bg-[#cdac88] flex flex-col gap-y-4 justify-between"> 
         <img src="../assets/img/Ace_Hotel_Kyoto.jpg" class="rounded" >
         <h3 class="font-bold text-lg text-[#1a425d]" >${hotel}, ${ciudad}</h3>
-        <p class="text-sm font-semibold flex-grow justify-center">Total de personas: ${cantPersonas}</p>
-        <div class="flex flex-col gap-4 lg:flex-row lg:gap-2 justify-between items-center"> 
+        <p class="text-md font-semibold flex-grow justify-center">Total de personas: ${cantPersonas}</p>
+        <div class="flex flex-col gap-4 justify-between items-start"> 
             <p class="font-bold">Fecha de ingreso: ${fechaEntrada}</p>
             <p class="font-bold">Fecha de salida: ${fechaSalida}</p>
         </div>
@@ -46,7 +46,7 @@ inputNombre.addEventListener('keyup', (e) => {
     let reservas = JSON.parse(localStorage.getItem('reservas'))
     listaReservas.innerHTML= ``
     let nombrePersona = e.target.value
-    let reservaDOM;
+    let reservaDOM= '';
 
 
     if(nombrePersona != ''){
@@ -92,9 +92,3 @@ inputNombre.addEventListener('keyup', (e) => {
 
 })
 
-document.addEventListener('DOMContentLoaded', () => {
-    
-   
-    
-    
-})
