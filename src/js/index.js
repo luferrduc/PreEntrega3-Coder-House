@@ -202,12 +202,15 @@ dbPersonas.map(dbPersona => {
     personas.push(persona)
 })
 
-localStorage.setItem('reservas', JSON.stringify(reservas))
-localStorage.setItem('personas', JSON.stringify(personas))
+// localStorage.setItem('reservas', JSON.stringify(reservas))
+// localStorage.setItem('personas', JSON.stringify(personas))
 
 
-function calcularValorReserva(){
-   
+function calcularValorReserva(valorNoche, cantidadDias){
+    console.log(valorNoche, cantidadDias)
+    let valorFinal = valorNoche*cantidadDias*1.19
+    console.log("Valor final", valorFinal)
+    return valorFinal
 }
 
 function crearPersona(){
@@ -255,11 +258,29 @@ function crearReserva(idHotel, rutPersona, cantidadPersonas, fechaIngreso, fecha
         idReserva = generarID()
     }
     let reservasLocal = JSON.parse(localStorage.getItem('reservas'))
-    // console.log(reservasLocal)
 
-    let reserva = new Reserva(idReserva, ciudad.nombreCiudad, hotel.nombre, parseInt(cantidadPersonas), hotel.precio, personaCreada.nombre, fechaIngreso, fechaSalida)
+    let fechaIngresoFinal = DateTime.fromISO(fechaIngreso)
+    let fechaSalidaFinal = DateTime.fromISO(fechaSalida)
+    let cantidadDias = fechaSalidaFinal.diff(fechaIngresoFinal, 'days').values.days
+    
+    let precioFinal = calcularValorReserva(hotel.precio, cantidadDias)
+
+    let reserva = new Reserva(idReserva, ciudad.nombreCiudad, hotel.nombre, parseInt(cantidadPersonas), precioFinal, personaCreada.nombre, fechaIngreso, fechaSalida)
     reservasLocal.push(reserva)
     localStorage.setItem('reservas', JSON.stringify(reservasLocal))
+
+    Toastify({
+        text: `Resserva con id ${idReserva} creada correctamente`,
+        duration: 3000,
+        close: false,
+        gravity: "top", 
+        position: "right", 
+        stopOnFocus: true,
+        style: {
+          background: "linear-gradient(to right,#4A7674, #AEC8B2)",
+        },
+        hideProgressBar: false
+      }).showToast();
 
     return reserva
 }
@@ -387,13 +408,38 @@ fechaIngresoInput.addEventListener('change', (e)  => {
 formReserva.addEventListener('submit', (e) => {
     e.preventDefault()
     let idHotel = parseInt(nombreHotelForm.firstChild.textContent)
+    
+    let  fechaFormateada  = DateTime.fromISO(fechaIngresoInput.value).toFormat('dd-MM-yyyy HH:mm')
 
-    console.log(localStorage.getItem('reservas'))
-    if(rutPersonaInput.value != '' && nombrePersonaInput.value != '' && cantidadPersonasInput.value !=  '' &&  fechaIngresoInput.value  !=  '' && fechaSalidaInput.value  != '' ){
-        crearReserva(idHotel, rutPersonaInput.value , cantidadPersonasInput.value , fechaIngresoInput.value , fechaSalidaInput.value  )
-    }
-    // console.log(e)
+    Swal.fire({
+        title: 'Estás seguro?',
+        text: "Tu reserva será creada y agendada",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4A7674',
+        cancelButtonColor: '#c56a57',
+        confirmButtonText: 'Si, reservar!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            if(rutPersonaInput.value != '' && nombrePersonaInput.value != '' && cantidadPersonasInput.value !=  '' &&  fechaIngresoInput.value  !=  '' && fechaSalidaInput.value  != '' ){
+                let  reserva = crearReserva(idHotel, rutPersonaInput.value, cantidadPersonasInput.value , fechaIngresoInput.value , fechaSalidaInput.value  )
+                Swal.fire(
+                    `Reserva creada exitosamente`,
+                    `Tu reserva fue realizada exitosamente para la fecha ${fechaFormateada}.
+                    El ID de tu reserva es el siguiente: ${reserva.id}
+                    `,
+                    'success'
+                )
+            }
+        }
+      })
+
+      // Ahora viene crear la  tarjeta del valor final
+
 })
+
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
     listaHoteles.innerHTML = listarHoteles()
