@@ -576,4 +576,5 @@ function resetInputs(){
     rutPersonaInput.value = ''
     cantidadPersonasInput.value = ''
     fechaSalidaInput.disabled = true
+    valorFinalContainer.innerHTML = ''
 }
