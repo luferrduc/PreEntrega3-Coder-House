@@ -24,6 +24,7 @@ const crearReservaCard = (reserva) => {
     let reservaCard = 
     `
     <div class="card rounded-md p-4 bg-[#cdac88] flex flex-col gap-y-4 justify-between"> 
+        <h2 class="font-bold text-lg text-[#1a425d]" >${nombrePersona}</h2>
         <img src="../assets/img/${hotel}.jpg" class="rounded" >
         <h3 class="font-bold text-lg text-[#1a425d]" >${hotel}, ${ciudad}</h3>
         <p class="text-md font-semibold flex-grow justify-center">Total de personas: ${cantPersonas}</p>
