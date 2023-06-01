@@ -22,6 +22,7 @@ const defaultModal = document.getElementById('defaultModal')
 const cerrarModal = document.getElementById('cerrarModal')
 const botonCerrarModal = document.getElementById('botonCerrarModal')
 const cerrarModalButton = document.getElementById('cerrarModalButton')
+const valorFinalContainer = document.getElementById('valorFinal')
 // Datos Persona
 const rutPersonaInput = document.getElementById('rutPersona')
 const nombrePersonaInput = document.getElementById('nombrePersona')
@@ -202,15 +203,16 @@ dbPersonas.map(dbPersona => {
     personas.push(persona)
 })
 
-// localStorage.setItem('reservas', JSON.stringify(reservas))
-// localStorage.setItem('personas', JSON.stringify(personas))
+localStorage.getItem('reservas') ?? localStorage.setItem('reservas', JSON.stringify(reservas))
+
+localStorage.getItem('personas') ?? localStorage.setItem('personas', JSON.stringify(personas))
 
 
 function calcularValorReserva(valorNoche, cantidadDias){
-    console.log(valorNoche, cantidadDias)
+   
     let valorFinal = valorNoche*cantidadDias*1.19
-    console.log("Valor final", valorFinal)
-    return valorFinal
+
+    return Math.round(valorFinal)
 }
 
 function crearPersona(){
@@ -222,13 +224,12 @@ function crearPersona(){
     let id = cantidadPersonasInscritas + 1
     let persona = buscarPersona(rutPersona)
 
+    let personasLocal = JSON.parse(localStorage.getItem('personas'))
+
     if(!persona){
         persona = new Persona(id, nombrePersona, edadPersona, rutPersona)
-        // personas.push(persona)
-        // localStorage.getItem('personas')
-        // personas.push(persona)
-        console.log(persona)
-        console.log("Creando Persona")
+        personasLocal.push(persona)
+        localStorage.setItem('personas', JSON.stringify(personasLocal))
     }
     return persona
 }
@@ -300,7 +301,6 @@ function buscarHotel(idBusca){
 
     for (const ciudad of hoteles) {
         let hotelE = ciudad.hoteles.find( (hotel) => {
-            // console.log(hotel, hotel.id, idBusca)
             return parseInt(hotel.id) == parseInt(idBusca)
         }) 
         if(hotelE){
@@ -310,7 +310,6 @@ function buscarHotel(idBusca){
             break
         }
     }
-    // console.log(hotelCiudad)
     return hotelCiudad
 }
 
@@ -365,7 +364,7 @@ const crearHotelCard = (hotel, ciudad) => {
     let hotelCard = 
     `
     <div class="card rounded-md p-4 bg-[#cdac88] flex flex-col gap-y-4 justify-between"> 
-        <img src="./assets/img/Ace_Hotel_Kyoto.jpg" class="rounded" >
+        <img src="./assets/img/${nombreHotel}.jpg" class="rounded" >
         <h3 class="font-bold text-lg text-[#1a425d]" >${nombreHotel}, ${nombreCiudad}</h3>
         <p class="text-sm font-semibold flex-grow justify-center">${descripcion}</p>
         <div class="flex flex-col gap-4 lg:flex-row lg:gap-2 justify-between items-center"> 
@@ -387,24 +386,47 @@ function listarHoteles(){
     return hotelesDOM
 }
 
+function valorFinalCard(precio){
+    let finalPriceCard = 
+    `
+    <div class="card rounded-md p-4 bg-[#f2f2f2] flex flex-col gap-y-4 justify-between"> 
+        <h3 class="font-bold text-lg text-[#1a425d]" >Precio por pagar: $${precio}</h3>
+    </div>
+    `;
+
+    return finalPriceCard
+}
 
 // EVENTOS 
 
 fechaIngresoInput.addEventListener('change', (e)  => {
     if(fechaIngresoInput.value != '')
     {   
-        // console.log(fechaIngresoInput.value)
         fechaSalidaInput.disabled = false
-        // console.log("ANTES", fechaSalidaInput.min)
         fechaSalidaInput.min = DateTime.fromISO(fechaIngresoInput.value).plus({days: 1}).toISO({includeOffset: false,  suppressMilliseconds: true, suppressSeconds: true})
         fechaSalidaInput.max = DateTime.local().plus({years: 10}).toFormat('yyyy-MM-dd\'T\'HH:mm')
-        console.log(fechaSalidaInput.max)
-        // console.log("DESPUES", fechaSalidaInput.min)
+       
     }
-    // console.log(fechaIngresoInput.value)
 })
 
 // EVENTO FORMULARIO PARA CREAR RESERVA
+
+formReserva.addEventListener('change', (e) => {
+
+    let idHotel = parseInt(nombreHotelForm.firstChild.textContent)
+    let { hotel } = buscarHotel(idHotel)
+
+    if(fechaIngresoInput.value != '' && fechaSalidaInput.value != ''){
+        let fechaIngresoFinal = DateTime.fromISO(fechaIngresoInput.value)
+        let fechaSalidaFinal = DateTime.fromISO(fechaSalidaInput.value)
+        let cantidadDias = fechaSalidaFinal.diff(fechaIngresoFinal, 'days').values.days
+        let valorFinal = calcularValorReserva(hotel.precio, cantidadDias)
+        valorFinalContainer.innerHTML =  valorFinalCard(valorFinal)
+
+    }
+   
+})
+
 formReserva.addEventListener('submit', (e) => {
     e.preventDefault()
     let idHotel = parseInt(nombreHotelForm.firstChild.textContent)
@@ -418,7 +440,8 @@ formReserva.addEventListener('submit', (e) => {
         showCancelButton: true,
         confirmButtonColor: '#4A7674',
         cancelButtonColor: '#c56a57',
-        confirmButtonText: 'Si, reservar!'
+        confirmButtonText: 'Si, reservar!',
+
       }).then((result) => {
         if (result.isConfirmed) {
             if(rutPersonaInput.value != '' && nombrePersonaInput.value != '' && cantidadPersonasInput.value !=  '' &&  fechaIngresoInput.value  !=  '' && fechaSalidaInput.value  != '' ){
@@ -431,11 +454,11 @@ formReserva.addEventListener('submit', (e) => {
                     'success'
                 )
             }
+            valorFinalContainer.innerHTML = ''
+            resetInputs()
+            defaultModal.classList.toggle('hidden')
         }
       })
-
-      // Ahora viene crear la  tarjeta del valor final
-
 })
 
 
@@ -521,24 +544,36 @@ rutPersonaInput.addEventListener('keyup', (e) => {
 // EVENTOS DE CIERRE Y APERTURA MODAL
 
 botonCerrarModal.addEventListener('click', (e) => {
+    resetInputs()
     defaultModal.classList.toggle('hidden')
+ 
 })
 
 
 window.addEventListener('click', (e) => {
     if(e.target == defaultModal){
+        resetInputs()
         defaultModal.classList.toggle('hidden')
     }
 })
 
 cerrarModalButton.addEventListener('click', (e) => {
+    resetInputs()
     defaultModal.classList.toggle('hidden')
 })
 
 fechaIngresoInput.addEventListener('change', (e) => {
-    // console.log(e.target.value)
-    // console.log(typeof e.target.value)
-    // const fecha = new Date(e.target.value).
-    // console.log(fecha)
+    if(fechaIngresoInput.value == '') fechaSalidaInput.disabled = true
 })
 
+
+function resetInputs(){
+
+    fechaIngresoInput.value = ''
+    fechaSalidaInput.value = ''
+    edadPersonaInput.value = ''
+    nombrePersonaInput.value = ''
+    rutPersonaInput.value = ''
+    cantidadPersonasInput.value = ''
+    fechaSalidaInput.disabled = true
+}
